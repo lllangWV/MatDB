@@ -5,6 +5,9 @@ on:
     branches:
       - dev  # Change this to the branch you want to track commits on
 
+permissions:
+  contents: write  # This allows the workflow to push changes
+
 jobs:
   run-script:
     if: "!contains(github.event.head_commit.message, 'Update changelog on release')"  # Skip if this commit is from the workflow
