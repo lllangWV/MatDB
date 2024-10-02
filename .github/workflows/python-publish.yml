@@ -61,9 +61,6 @@ jobs:
         echo "$CHANGELOG" >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
 
-    - name: List files
-      run: ls -la
-
     - name: Configure git for committing
       if: success() 
       run: |
@@ -80,7 +77,7 @@ jobs:
     - name: Push changes
       if: success()
       run: |
-        git push origin ${{ github.ref }}
+        git push origin HEAD:main
 
     - name: Get the current release body
       if: success() 

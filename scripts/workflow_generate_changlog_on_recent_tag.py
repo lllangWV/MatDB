@@ -132,7 +132,7 @@ def modify_changelog(changelog_message):
 
     # Prepend the new changelog message
     updated_changelog = changelog_message + current_changelog
-
+    print(updated_changelog)
     # Write the updated changelog back to the file
     with open('CHANGELOG.md', 'w') as file:
         file.write(updated_changelog)
