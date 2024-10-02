@@ -21,6 +21,11 @@ jobs:
     - name: Fetch all tags
       run: git fetch --tags
 
+    - name: Clear GitHub Cache (Manual)
+      run: |
+        rm -rf ~/.cache/pip
+        rm -rf venv
+
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
