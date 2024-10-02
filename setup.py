@@ -5,7 +5,9 @@ def version_for_project(version: ScmVersion) -> str:
    print(f"setup.py:version: {version.tag}")
    return str(version.tag)
    
-print(setuptools_scm.__version__)
+import pkg_resources
+print(pkg_resources.get_distribution('setuptools_scm').version)
+print(pkg_resources.get_distribution('setuptools').version)
 
 
 print("setup.py: Starting setup")
