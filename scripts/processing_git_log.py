@@ -125,6 +125,7 @@ def generate_changelog_message():
     return changelog_message
 
 def modify_changelog(changelog_message):
+    
     # Read the current CHANGELOG.md
     with open('CHANGELOG.md', 'r') as file:
         current_changelog = file.read()
