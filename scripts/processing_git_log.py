@@ -36,4 +36,5 @@ def bash_command(command):
 
 if __name__ == "__main__":
     # Example usage:
-    print(bash_command('git status'))
+    bash_command('git fetch --all --tags')
+    print(bash_command('git tag'))
