@@ -36,4 +36,4 @@ def bash_command(command):
 
 if __name__ == "__main__":
     # Example usage:
-    print(bash_command('git tag'))
+    print(bash_command('git status'))
