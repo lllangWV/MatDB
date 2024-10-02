@@ -30,6 +30,13 @@ jobs:
     - name: Build package
       run: python -m build
 
+    - name: Publish package
+      if: success()
+      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
+
     - name: Install dependencies for OpenAI script
       if: success() 
       run: pip install openai python-dotenv requests
@@ -70,16 +77,7 @@ jobs:
         
         python scripts/workflow_update_release_body.py
 
-    - name: Build package
-      if: success()
-      run: python -m build
-
-    - name: Publish package
-      if: success()
-      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+    
 
     # Add a failure cleanup step to delete the release if the workflow fails
     - name: Delete release if failed
