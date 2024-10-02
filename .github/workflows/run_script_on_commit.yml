@@ -13,6 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Change to repository root
+        run: cd ${{ github.workspace }}
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -21,6 +24,9 @@ jobs:
       - name: Get the current version and run Python script
         run: |
         # Get the latest tag
-        version= $(git tag --sort=-creatordate | head -n 1)
+        allTags=$(git tag)
+        echo "All Tags: $allTags"
+        version=$(git tag 0.0.1)
         echo "Current Version: $version"
+        
 
