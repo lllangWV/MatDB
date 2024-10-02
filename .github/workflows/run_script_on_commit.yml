@@ -21,6 +21,12 @@ jobs:
     - name: Fetch all tags
       run: git fetch --tags
 
+    - name: Get the current version
+      run: |
+        # Get the latest tag
+        version=$(git tag)
+        echo "Current Version: $version"
+
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
