@@ -53,6 +53,7 @@ jobs:
       if: success() 
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}  # Pass the secret as an environment variable
+        TAG: ${{ env.TAG }}
       run: |
 
         CHANGELOG=$(python scripts/workflow_generate_changlog_on_recent_tag.py)
@@ -74,7 +75,7 @@ jobs:
       run: |
         git add matdb/_version.py
         git add CHANGELOG.md
-        git commit -m "Update _version.py and CHANGELOG due to new release"
+        git commit -m "Update _version.py and CHANGELOG.md due to new release"
 
     - name: Push changes
       if: success()

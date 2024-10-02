@@ -9,6 +9,7 @@ from datetime import datetime
 load_dotenv()
 
 api_key = os.getenv("OPENAI_API_KEY")
+TAG = os.getenv('TAG')
 
 def run_git_command(command):
     try:
@@ -101,19 +102,19 @@ def summarize_commit_messages(commit_messages):
 
 def generate_changelog_message():
     # Example usage:
-    bash_command('git fetch --all --tags')
-    current_version = bash_command('git tag -l --sort=v:refname').strip()
+    # bash_command('git fetch --all --tags')
+    # current_version = bash_command('git tag -l --sort=v:refname').strip()
     # print(f"Current Version: {current_version}")
     # print(f'git log --pretty=format:"%h-%s" {current_version}..')
 
-    commit_logs_str=bash_command(f'git log --pretty=format:"%h-%s" {current_version}..')
+    commit_logs_str=bash_command(f'git log --pretty=format:"%h-%s" {TAG}..')
     commit_logs=commit_logs_str.split('\n')
     commit_messages=[commit_log.split('-')[-1] for commit_log in commit_logs]
     # print(commit_messages)
 
     changes_summary=summarize_commit_messages(commit_messages)
     current_date = datetime.now().strftime("%m-%d-%Y")
-    changelog_message=changelog_template.format(version=current_version, 
+    changelog_message=changelog_template.format(version=TAG, 
                                                 changes_summary=changes_summary,
                                                 current_date=current_date)
     # print('-'*200)
@@ -144,5 +145,5 @@ if __name__ == "__main__":
     changelog_message=generate_changelog_message()
 
 
-    modify_changelog(changelog_message)
+    # modify_changelog(changelog_message)
     
