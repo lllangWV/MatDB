@@ -37,8 +37,8 @@ jobs:
         pip install build setuptools_scm setuptools
 
     - name: Clean build artifacts
-        run: |
-          rm -rf build dist *.egg-info
+      run: |
+        rm -rf build dist *.egg-info
 
     - name: Build package
       env:
