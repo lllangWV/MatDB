@@ -125,10 +125,13 @@ def generate_changelog_message():
     return changelog_message
 
 def modify_changelog(changelog_message):
-    
+
     # Read the current CHANGELOG.md
-    with open('CHANGELOG.md', 'r') as file:
-        current_changelog = file.read()
+    try:
+        with open('CHANGELOG.md', 'r') as file:
+            current_changelog = file.read()
+    except FileNotFoundError:
+        current_changelog = "___\n___"
 
     # Prepend the new changelog message
     updated_changelog = changelog_message + '\n' + current_changelog
@@ -139,5 +142,8 @@ def modify_changelog(changelog_message):
 
 
 if __name__ == "__main__":
-    generate_changelog_message()
+    changelog_message=generate_changelog_message()
+
+
+    modify_changelog(changelog_message)
     
