@@ -21,10 +21,12 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.x'
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install build
+
     - name: Build package
       run: python -m build
 
@@ -38,7 +40,7 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}  # Pass the secret as an environment variable
       run: |
 
-        python scripts/processing_git_log.py
+        changelog_output=$(python scripts/workflow_generate_changlog_on_recent_tag.py)
 
     - name: Configure git for committing
       if: success() 
@@ -65,27 +67,23 @@ jobs:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
 
-    # Add a failure cleanup step to delete the release if the workflow fails
-    - name: Delete release if failed
-      if: failure()  # Run only if previous steps failed
+    - name: Get the current release body
+      if: success() 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        RELEASE_ID: ${{ github.event.release.id }}
+        REPO_NAME: ${{ github.repository }}
       run: |
-        RELEASE_ID=$(curl \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.event.release.tag_name }} \
-          | jq -r '.id')
+        
+        python scripts/workflow_update_release_body.py
 
-        # Delete the release
-        curl \
-          -X DELETE \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID
+    # Add a failure cleanup step to delete the release if the workflow fails
+    - name: Delete release if failed
+      if: failure() 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        RELEASE_ID: ${{ github.event.release.id }}
+        REPO_NAME: ${{ github.repository }}
+      run: |
 
-        # Optionally, delete the tag associated with the release
-        curl \
-          -X DELETE \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          https://api.github.com/repos/${{ github.repository }}/git/refs/tags/${{ github.event.release.tag_name }}
-
+        workflow_delete_release.py
