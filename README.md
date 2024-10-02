@@ -1,12 +1,11 @@
-# ParquetDB
+# MatDB
 
-ParquetDB is a lightweight database-like system built on top of Apache Parquet files using PyArrow. It offers a simple and efficient way to store, manage, and retrieve complex data types without the overhead of serialization, which is often a bottleneck in machine learning pipelines. By leveraging Parquet's columnar storage format and PyArrow's computational capabilities, ParquetDB provides high performance for data-intensive applications. 
-
+MatDB is a material science database designed to be light weight and portable. It is built on top of Apache Parquet files using PyArrow, which reduces the overhead of serialization and allows for efficient storage and retrieval of complex data types.
 
 ## Table of Contents
 
 - [Features](#features)
-- [Why ParquetDB?](#why-parquetdb)
+- [Why MatDB?](#why-matdb)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Usage](#usage)
@@ -33,7 +32,7 @@ ParquetDB is a lightweight database-like system built on top of Apache Parquet f
 - Multiprocessing for reading and writing
 - Increase support for nested structures
 
-## Why ParquetDB?
+## Why MatDB?
 
 ### The Challenge of Serialization and Deserialization
 
@@ -65,58 +64,61 @@ Apache Parquet files offer a solution to the serialization/deserialization probl
 
 By leveraging these features, ParquetDB eliminates the need for explicit serialization and deserialization of complex data types. Data can be read directly from and written directly to Parquet files, maintaining its structure and allowing for efficient querying and processing.
 
-### The ParquetDB Advantage
+### The MatDB Advantage
 
-ParquetDB builds upon the benefits of Parquet files by providing:
+MatDB builds upon the benefits of Parquet files by providing:
 
 1. A simple, database-like interface for working with Parquet files
 2. Efficient storage and retrieval of complex data types
 3. High-performance data operations leveraging PyArrow's computational capabilities
 4. Seamless integration with machine learning pipelines and data processing workflows
 
-By using ParquetDB, developers and data scientists can focus on their core tasks without worrying about the intricacies of data serialization or the performance implications of frequent I/O operations. This results in faster development cycles, improved system performance, and more efficient use of computational resources.
+By using MatDB, developers and data scientists can focus on their core tasks without worrying about the intricacies of data serialization or the performance implications of frequent I/O operations. This results in faster development cycles, improved system performance, and more efficient use of computational resources.
 
 
 ## Installation
 
-Install ParquetDB using pip:
+Install MatDB using pip:
 
 ```bash
-pip install parquetdb
+pip install matdb
 ```
 
 ## Quick Start
 
 ```python
-from parquetdb import ParquetDB
+from matdb import MatDB
 
 # Initialize the database
-db = ParquetDB('path/to/db')
+db = MatDB('path/to/db')
 
 # Create data
-data = [
-    {'name': 'Alice', 'age': 30, 'occupation': 'Engineer'},
-    {'name': 'Bob', 'age': 25, 'occupation': 'Data Scientist'}
-]
+properties={
+    'density': 7.8,
+    'volume': 22.1
+}
+structure=Structure.from_spacegroup("Fm-3m", Lattice.cubic(4.1437), ["Cs", "Cl"], [[0, 0, 0], [0.5, 0.5, 0.5]])
+data={'structure': structure, 'properties': properties}
+
 
 # Add data to the database
-db.create(data, table_name='employees')
+db.add(structure=structure, properties=properties, table_name='materials')
 
 # Read data from the database
-employees = db.read(table_name='employees')
-print(employees.to_pandas())
+materials_table = db.read(table_name='materials')
+print(materials_table.to_pandas())
 ```
 
 ## Usage
 
 ### Creating a Database
 
-Initialize a ParquetDB instance by specifying the path to the database directory:
+Initialize a MatDB instance by specifying the path to the database directory:
 
 ```python
-from parquetdb import ParquetDB
+from matdb import MatDB
 
-db = ParquetDB('path/to/db')
+db = MatDB('path/to/db')
 ```
 
 ### Adding Data
@@ -124,12 +126,17 @@ db = ParquetDB('path/to/db')
 Add data to the database using the `create` method. Data can be a dictionary, a list of dictionaries, or a Pandas DataFrame.
 
 ```python
-data = [
-    {'name': 'Charlie', 'age': 28, 'occupation': 'Designer'},
-    {'name': 'Diana', 'age': 32, 'occupation': 'Product Manager'}
+
+properties={
+    'density': 7.8,
+    'volume': 22.1
+}
+data_list = [
+    {'structure': Structure.from_spacegroup("Fm-3m", Lattice.cubic(4.1437), ["Cs", "Cl"], [[0, 0, 0], [0.5, 0.5, 0.5]]), 'properties': properties},
+    {'structure': Structure.from_spacegroup("Fm-3m", Lattice.cubic(4.1437), ["Cs", "Cl"], [[0, 0, 0], [0.5, 0.5, 0.5]]), 'properties': properties}
 ]
 
-db.create(data, table_name='employees')
+db.add_many(dadata_listta, table_name='materials')
 ```
 
 ### Reading Data
@@ -138,16 +145,16 @@ Read data from the database using the `read` method. You can filter data by IDs,
 
 ```python
 # Read all data
-all_employees = db.read(table_name='employees')
+all_materials = db.read(table_name='materials')
 
 # Read specific columns
-names = db.read(table_name='employees', columns=['name'])
+names = db.read(table_name='materials', columns=['name'])
 
 # Read data with filters
 from pyarrow import compute as pc
 
 age_filter = pc.field('age') > 30
-older_employees = db.read(table_name='employees', filters=[age_filter])
+older_materials = db.read(table_name='materials', filters=[age_filter])
 ```
 
 ### Updating Data
@@ -156,11 +163,11 @@ Update existing records in the database using the `update` method. Each record m
 
 ```python
 update_data = [
-    {'id': 1, 'occupation': 'Senior Engineer'},
-    {'id': 3, 'age': 29}
+    {'id': 0, 'property_1': 'metal'},
+    {'id': 2, 'property_2': 'gas'}
 ]
 
-db.update(update_data, table_name='employees')
+db.update(update_data, table_name='materials')
 ```
 
 ### Deleting Data
@@ -168,7 +175,7 @@ db.update(update_data, table_name='employees')
 Delete records from the database by specifying their IDs.
 
 ```python
-db.delete(ids=[2, 4], table_name='employees')
+db.delete(ids=[0, 3], table_name='materials')
 ```
 
 
