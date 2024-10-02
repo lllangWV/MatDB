@@ -1,0 +1,30 @@
+name: Run Script on Commit
+
+on:
+  push:
+    branches:
+      - main  # Change this to the branch you want to track commits on
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'  # Specify your desired Python version
+
+      - name: Get the current version and run Python script
+        run: |
+          # Get the latest tag
+          version=$(git tag --sort=-creatordate | head -n 1)
+          
+          # Log commit messages between the latest tag and the current commit
+          commit_log=$(git log --pretty=format:"%h - %s" "$version..")
+
+          # Run the Python script with the version and log as arguments
+          python .gitignore/scripts/processing_git_log.py "$version" "$commit_log"
