@@ -25,5 +25,4 @@ def run_git_command(command):
 
 if __name__ == "__main__":
     # Example usage:
-    print(run_git_command('status'))
-    print(run_git_command('log --oneline -n 5'))
+    print(run_git_command('git tag --sort=-creatordate | head -n 1'))
