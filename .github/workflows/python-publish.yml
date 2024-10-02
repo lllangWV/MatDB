@@ -47,14 +47,15 @@ jobs:
         git config --global user.email "action@github.com"
 
     - name: Commiting new version of the changelog and the version file
-        if: success() 
-        run: |
-          git add matdb/_version.py
-          git add CHANGELOG.md
-          git commit -m "Update _version.py and CHANGELOG due to new release"
+      if: success() 
+      run: |
+        git add matdb/_version.py
+        git add CHANGELOG.md
+        git commit -m "Update _version.py and CHANGELOG due to new release"
 
     - name: Push changes
       if: success()
+      run: |
         git push origin ${{ github.ref }}
 
     - name: Publish package
