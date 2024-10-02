@@ -56,7 +56,9 @@ jobs:
       run: |
 
         changelog_output=$(python scripts/workflow_generate_changlog_on_recent_tag.py)
-        echo "changelog_output=$changelog_output" >> $GITHUB_ENV
+        echo "changelog_output<<EOF" >> $GITHUB_ENV
+        echo "$changelog_output" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV
 
     - name: List files
       run: ls -la
