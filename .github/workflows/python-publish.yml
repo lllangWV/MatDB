@@ -55,9 +55,9 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}  # Pass the secret as an environment variable
       run: |
 
-        changelog_output=$(python scripts/workflow_generate_changlog_on_recent_tag.py)
-        echo "changelog_output<<EOF" >> $GITHUB_ENV
-        echo "$changelog_output" >> $GITHUB_ENV
+        CHANGELOG=$(python scripts/workflow_generate_changlog_on_recent_tag.py)
+        echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+        echo "$CHANGELOG" >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
 
     - name: List files
