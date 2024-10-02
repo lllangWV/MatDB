@@ -58,13 +58,10 @@ Here is an example:
 
 ##### Bugs
 - None identified
-
 ##### New features
 - Added new action to execute python script on push to main
-
 ##### Documentation updates
 - Updated readme
-
 ##### Maintenance
 - Moved GitHub actions scripts directory to root
 - Added tests
@@ -76,7 +73,6 @@ changelog_template = """
 ___
 
 # {version} ({current_date})
-
 
 {changes_summary}
 
@@ -107,20 +103,20 @@ def generate_changelog_message():
     # Example usage:
     bash_command('git fetch --all --tags')
     current_version = bash_command('git tag -l --sort=v:refname').strip()
-    print(f"Current Version: {current_version}")
-    print(f'git log --pretty=format:"%h-%s" {current_version}..')
+    # print(f"Current Version: {current_version}")
+    # print(f'git log --pretty=format:"%h-%s" {current_version}..')
 
     commit_logs_str=bash_command(f'git log --pretty=format:"%h-%s" {current_version}..')
     commit_logs=commit_logs_str.split('\n')
     commit_messages=[commit_log.split('-')[-1] for commit_log in commit_logs]
-    print(commit_messages)
+    # print(commit_messages)
 
     changes_summary=summarize_commit_messages(commit_messages)
     current_date = datetime.now().strftime("%m-%d-%Y")
     changelog_message=changelog_template.format(version=current_version, 
                                                 changes_summary=changes_summary,
                                                 current_date=current_date)
-    print('-'*200)
+    # print('-'*200)
     print(changelog_message)
     return changelog_message
 
