@@ -2,9 +2,9 @@ name: Run Script on Commit
 
 
 on:
-  release:
-    types: [published]
-
+  push:
+    branches:
+      - main  # Change this to the branch you want to track commits on
 permissions:
   contents: write  # This allows the workflow to push changes
 
