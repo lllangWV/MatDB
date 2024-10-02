@@ -25,7 +25,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build
+        pip install build openai python-dotenv requests
 
     - name: Build package
       run: python -m build
@@ -36,10 +36,6 @@ jobs:
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
-
-    - name: Install dependencies for OpenAI script
-      if: success() 
-      run: pip install openai python-dotenv requests
     
     - name: This will processes the commit messages and write to the CHANGELOG.md file
       if: success() 
