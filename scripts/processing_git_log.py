@@ -131,10 +131,10 @@ def modify_changelog(changelog_message):
         with open('CHANGELOG.md', 'r') as file:
             current_changelog = file.read()
     except FileNotFoundError:
-        current_changelog = "___\n___"
+        current_changelog = "___"
 
     # Prepend the new changelog message
-    updated_changelog = changelog_message + '\n' + current_changelog
+    updated_changelog = changelog_message + current_changelog
 
     # Write the updated changelog back to the file
     with open('CHANGELOG.md', 'w') as file:

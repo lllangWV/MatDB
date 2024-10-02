@@ -5,7 +5,7 @@ on:
     types: [published]
 
 permissions:
-  contents: read
+  contents: write  # This allows the workflow to push changes
 
 jobs:
   deploy:
@@ -14,6 +14,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history so we can access all commit logs
+
     - name: Set up Python
       uses: actions/setup-python@v3
       with:
@@ -24,8 +27,64 @@ jobs:
         pip install build
     - name: Build package
       run: python -m build
+
+    - name: Install dependencies for OpenAI script
+      if: success() 
+      run: pip install openai python-dotenv
+    
+    - name: This will processes the commit messages and write to the CHANGELOG.md file
+      if: success() 
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}  # Pass the secret as an environment variable
+      run: |
+
+        python scripts/processing_git_log.py
+
+    - name: Configure git for committing
+      if: success() 
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+
+    - name: Commiting new version of the changelog and the version file
+        if: success() 
+        run: |
+          git add matdb/_version.py
+          git add CHANGELOG.md
+          git commit -m "Update _version.py and CHANGELOG due to new release"
+
+    - name: Push changes
+      if: success()
+        git push origin ${{ github.ref }}
+
     - name: Publish package
+      if: success()
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
+
+    # Add a failure cleanup step to delete the release if the workflow fails
+    - name: Delete release if failed
+      if: failure()  # Run only if previous steps failed
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        RELEASE_ID=$(curl \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.event.release.tag_name }} \
+          | jq -r '.id')
+
+        # Delete the release
+        curl \
+          -X DELETE \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID
+
+        # Optionally, delete the tag associated with the release
+        curl \
+          -X DELETE \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          https://api.github.com/repos/${{ github.repository }}/git/refs/tags/${{ github.event.release.tag_name }}
+
