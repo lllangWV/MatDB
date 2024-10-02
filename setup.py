@@ -2,6 +2,7 @@ from setuptools import setup
 from setuptools_scm import ScmVersion
 
 def version_for_project(version: ScmVersion) -> str:
+   print(version.tag)
    return str(version.tag)
    
 
