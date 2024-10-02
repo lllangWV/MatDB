@@ -15,6 +15,17 @@ def run_git_command(command):
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
         return e.stderr
+    
+def bash_command(command):
+    try:
+        result = subprocess.run(command.split(), 
+                                check=True, 
+                                capture_output=True, 
+                                text=True)
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+        return e.stderr
 
 
 
