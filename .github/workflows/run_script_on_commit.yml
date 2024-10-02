@@ -23,7 +23,7 @@ jobs:
           python-version: '3.x'  # Specify your desired Python version
 
       - name: Install dependencies for OpenAI script
-        run: pip install openai, python-dotenv
+        run: pip install openai python-dotenv
 
       - name: Get the current version and run Python script
         env:
