@@ -37,8 +37,7 @@ def bash_command(command):
 if __name__ == "__main__":
     # Example usage:
     bash_command('git fetch --all --tags')
-
-    current_version = bash_command('git tag --sort=-creatordate | head -n 1')
+    current_version = bash_command('git tag -l --sort=v:refname')
     print(f"Current Version: {current_version}")
 
     commit_log=bash_command(f'git log --pretty=format:"%h-%s" {current_version}..')
