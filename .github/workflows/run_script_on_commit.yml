@@ -23,10 +23,7 @@ jobs:
 
       - name: Get the current version and run Python script
         run: |
-        # Get the latest tag
-        allTags=$(git tag)
-        echo "All Tags: $allTags"
-        version=$(git tag 0.0.1)
-        echo "Current Version: $version"
+
+        python .gitignore/scripts/processing_git_log.py
         
 
