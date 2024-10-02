@@ -3,7 +3,7 @@ name: Run Script on Commit
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to track commits on
+      - dev  # Change this to the branch you want to track commits on
 
 jobs:
   run-script:
@@ -21,6 +21,6 @@ jobs:
       - name: Get the current version and run Python script
         run: |
         # Get the latest tag
-        $version= $(git tag --sort=-creatordate | head -n 1)
+        version= $(git tag --sort=-creatordate | head -n 1)
         echo "Current Version: $version"
 
