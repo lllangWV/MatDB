@@ -20,12 +20,6 @@ jobs:
 
       - name: Get the current version and run Python script
         run: |
-          # Get the latest tag
-         echo "Latest tag is $(git tag --sort=-creatordate | head -n 1)"
-          # version=$(git tag --sort=-creatordate | head -n 1)
-          # echo $version
-          # # Log commit messages between the latest tag and the current commit
-          # commit_log=$(git log --pretty=format:"%h - %s" "$version..")
+        # Get the latest tag
+        echo "Latest tag is $(git tag --sort=-creatordate | head -n 1)"
 
-          # # Run the Python script with the version and log as arguments
-          # python .gitignore/scripts/processing_git_log.py "$version" "$commit_log"
