@@ -145,5 +145,5 @@ if __name__ == "__main__":
     changelog_message=generate_changelog_message()
 
 
-    # modify_changelog(changelog_message)
+    modify_changelog(changelog_message)
     
