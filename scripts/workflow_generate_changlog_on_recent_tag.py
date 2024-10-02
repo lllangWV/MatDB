@@ -136,8 +136,8 @@ def modify_changelog(changelog_message):
     with open('CHANGELOG.md', 'w') as file:
         file.write(updated_changelog)
 
-    print(os.getcwd())
-    print(os.listdir(os.getcwd()))
+    # print(os.getcwd())
+    # print(os.listdir(os.getcwd()))
 
 
 if __name__ == "__main__":
