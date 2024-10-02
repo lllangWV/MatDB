@@ -34,11 +34,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build setuptools_scm setuptools
+        pip install build .
 
-    - name: Clean build artifacts
-      run: |
-        rm -rf build dist *.egg-info
 
     - name: Build package
       env:
