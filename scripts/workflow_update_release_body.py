@@ -10,6 +10,7 @@ load_dotenv()
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 REPO_NAME = os.getenv('GITHUB_REPOSITORY')
 RELEASE_ID = os.getenv('RELEASE_ID')  # Pass the release ID from the GitHub Action context
+CHANGELOG = os.getenv('CHANGELOG')
 
 headers = {
     "Authorization": f"token {GITHUB_TOKEN}",
@@ -90,11 +91,11 @@ def update_release_body(input_string):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        input_string = sys.argv[1]
-        print(f"Received string: {input_string}")
-    else:
-        input_string=''
-        print("No string provided.")
-
-    update_release_body(input_string)
+    # if len(sys.argv) > 1:
+    #     input_string = sys.argv[1]
+    #     print(f"Received string: {input_string}")
+    # else:
+    #     input_string=''
+    #     print("No string provided.")
+    # print(input_string)
+    update_release_body(CHANGELOG)

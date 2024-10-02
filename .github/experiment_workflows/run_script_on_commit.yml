@@ -1,54 +1,53 @@
 name: Run Script on Commit
 
+
 on:
   push:
     branches:
-      - dev  # Change this to the branch you want to track commits on
-
+      - main  # Change this to the branch you want to track commits on
 permissions:
   contents: write  # This allows the workflow to push changes
 
 jobs:
-  run-script:
-    if: "!contains(github.event.head_commit.message, 'Update changelog on release')"  # Skip if this commit is from the workflow
+  deploy:
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Fetch all history so we can access all commit logs
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history so we can access all commit logs
 
-      - name: Change to repository root
-        run: cd ${{ github.workspace }}
+    - name: Fetch all tags
+      run: git fetch --tags
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'  # Specify your desired Python version
+    - name: Clear GitHub Cache (Manual)
+      run: |
+        rm -rf ~/.cache/pip
+        rm -rf venv
 
-      - name: Install dependencies for OpenAI script
-        run: pip install openai python-dotenv
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
 
-      - name: Get the current version and run Python script
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}  # Pass the secret as an environment variable
-        run: |
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build python-dotenv requests
 
-          python scripts/processing_git_log.py
+    - name: Build package and get version
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        RELEASE_ID: ${{ github.event.release.id }}
+        REPO_NAME: ${{ github.repository }}
+      run: |
 
-      - name: Configure git for committing
-        run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
+        TAG=$(python scripts/workflow_get_release_tag.py)
+        echo "TAG=$TAG" >> $GITHUB_ENV
 
-      - name: Stage the changelog file
-        run: git add CHANGELOG.md
-
-      - name: Commit the updated changelog
-        run: git commit -m "Update changelog on release"
-
-      - name: Push changes back to the repository
-        run: git push origin ${{ github.ref }}
-        
-
+    - name: Build package
+      env:
+        SETUPTOOLS_SCM_DEBUG: True
+        SETUPTOOLS_SCM_PRETEND_VERSION: ${{ env.TAG }} 
+      run: python -m build
