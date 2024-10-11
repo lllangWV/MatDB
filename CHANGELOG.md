@@ -1,6 +1,25 @@
 
 ___
 
+# 0.0.11 (10-11-2024)
+
+##### Bugs
+- None identified
+
+##### New Features
+- None identified
+
+##### Documentation
+- Updated _version.py and CHANGELOG.md due to new release
+
+##### Maintenance
+- Merged changes from the main branch of the remote repository
+- Updated GitHub workflow scripts
+
+___
+
+___
+
 # 0.0.10 (10-03-2024)
 
 ##### Bugs
