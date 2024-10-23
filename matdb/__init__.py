@@ -1,3 +1,5 @@
-from ._version import __version__
+from matdb._version import __version__
 
-from core import MatDB
+from matdb.utils.config import config
+
+from matdb.core import MatDB
